@@ -1,0 +1,43 @@
+import { useHttp } from "../hooks/http.hook";
+import hasRequiredFields from "../utils/hasRequiredFields";
+
+import {
+	IAppointment,
+	ActiveAppointmet,
+} from "../shared/interfaces/appointment.interface";
+
+const requredFields = ["id", "date", "name", "service", "phone", "canceled"];
+
+const useAppointmentService = () => {
+	const { loadingStatus, request } = useHttp();
+
+	const _apiBase = "http://localhost:3000/appointment";
+
+	const getAllappoinments = async (): Promise<IAppointment[]> => {
+		const res = await request({ url: _apiBase });
+		if (
+			res.every((item: IAppointment) => hasRequiredFields(item, requredFields))
+		) {
+			return res;
+		} else {
+			throw new Error("Data doesent have all the filds");
+		}
+	};
+
+	const getAllActiveAppointments = async () => {
+		const base = await getAllappoinments();
+		const transformed: ActiveAppointmet[] = base.map((item) => {
+			return {
+				id: item.id,
+				date: item.date,
+				name: item.name,
+				service: item.service,
+				phone: item.phone,
+			};
+		});
+
+		return transformed;
+	};
+
+	return { loadingStatus, getAllappoinments, getAllActiveAppointments };
+};
