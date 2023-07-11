@@ -7,4 +7,6 @@ export interface IAppointment {
 	canceled: boolean;
 }
 
+export type LoadingStatus = string;
+
 export type ActiveAppointmet = Omit<IAppointment, "canceled">;
