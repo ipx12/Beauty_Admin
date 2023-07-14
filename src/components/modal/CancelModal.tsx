@@ -1,5 +1,5 @@
 import Portal from "../portal/portal";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 import "./modal.scss";
 
@@ -11,6 +11,20 @@ interface IModalProps {
 
 function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
 	const nodeRef = useRef<HTMLDivElement>(null);
+
+	const closeOnEscapeKey = (e: KeyboardEvent) => {
+		if (e.key === "Escape") {
+			handleClose(false);
+		}
+	};
+
+	useEffect(() => {
+		document.body.addEventListener("keydown", closeOnEscapeKey);
+
+		return () => {
+			document.body.removeEventListener("keydown", closeOnEscapeKey);
+		};
+	}, [handleClose]);
 
 	return (
 		<Portal>
