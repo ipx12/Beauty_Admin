@@ -45,7 +45,6 @@ function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
 							<button
 								className="modal__close"
 								onClick={() => handleClose(false)}
-								onKeyDown={(e) => console.log(e)}
 							>
 								Close
 							</button>

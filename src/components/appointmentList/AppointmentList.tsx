@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 
 import Spinner from "../spinner/Spinner";
 import Error from "../error/Error";
@@ -21,6 +21,11 @@ function AppointmentList() {
 		getActiveAppointments();
 	}, []);
 
+	const handleOpenModal = useCallback((id: number) => {
+		setIsOpen(true);
+		selectId(id);
+	}, []);
+
 	if (appointmentLoadingStatus === "loading") {
 		return <Spinner />;
 	} else if (appointmentLoadingStatus === "error") {
@@ -34,6 +39,8 @@ function AppointmentList() {
 		);
 	}
 
+	console.log("render list");
+
 	return (
 		<>
 			{activeAppointments.map((item) => {
@@ -41,8 +48,7 @@ function AppointmentList() {
 					<AppointmentItem
 						{...item}
 						key={item.id}
-						openModal={setIsOpen}
-						selectId={() => selectId(item.id)}
+						openModal={handleOpenModal}
 					/>
 				);
 			})}
