@@ -32,11 +32,6 @@ export default function reducer(
 			return { ...state, appointmentLoadingStatus: "loading" };
 		case ActionTypes.ERROR_FETCHING_APPOINTMENTS:
 			return { ...state, appointmentLoadingStatus: "error" };
-		case ActionTypes.SET_ACTIVE_APPOINTMENTS:
-			return {
-				...state,
-				activeAppointments: action.payload,
-			};
 		default:
 			return state;
 	}
