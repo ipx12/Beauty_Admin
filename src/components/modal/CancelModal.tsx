@@ -1,6 +1,9 @@
 import Portal from "../portal/portal";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { CSSTransition } from "react-transition-group";
+import useAppointmentService from "../../services/AppointmentService";
+import { AppointmentContext } from "../../context/appointments/AppointmentsContext";
+
 import "./modal.scss";
 
 interface IModalProps {
@@ -10,13 +13,46 @@ interface IModalProps {
 }
 
 function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
+	const { getActiveAppointments } = useContext(AppointmentContext);
+
+	const { cancelOneAppointment } = useAppointmentService();
+
 	const nodeRef = useRef<HTMLDivElement>(null);
+	const cancelStatusRef = useRef<boolean | null>(null);
+
+	const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
+	const [cancelStatus, setCancelStatus] = useState<boolean | null>(null);
+
+	const handleCancelAppointment = (id: number) => {
+		setBtnDisabled(true);
+		cancelOneAppointment(id)
+			.then(() => {
+				console.log("done");
+				setCancelStatus(true);
+			})
+			.catch(() => {
+				console.log("error");
+				setCancelStatus(false);
+				setBtnDisabled(false);
+			});
+	};
+
+	const closeModal = () => {
+		handleClose(false);
+		if (cancelStatus || cancelStatusRef.current) {
+			getActiveAppointments();
+		}
+	};
 
 	const closeOnEscapeKey = (e: KeyboardEvent) => {
 		if (e.key === "Escape") {
-			handleClose(false);
+			closeModal();
 		}
 	};
+
+	useEffect(() => {
+		cancelStatusRef.current = cancelStatus;
+	}, [cancelStatus]);
 
 	useEffect(() => {
 		document.body.addEventListener("keydown", closeOnEscapeKey);
@@ -38,18 +74,27 @@ function CancelModal({ handleClose, selectedId, isOpen }: IModalProps) {
 				<div className="modal" ref={nodeRef}>
 					<div className="modal__body">
 						<span className="modal__title">
-							Are you sure you want to delete the appointment? {selectedId}
+							Are you sure you want to delete the appointment? #{selectedId}
 						</span>
 						<div className="modal__btns">
-							<button className="modal__ok">Ok</button>
 							<button
-								className="modal__close"
-								onClick={() => handleClose(false)}
+								className="modal__ok"
+								disabled={btnDisabled}
+								onClick={() => handleCancelAppointment(selectedId)}
 							>
+								Ok
+							</button>
+							<button className="modal__close" onClick={() => closeModal()}>
 								Close
 							</button>
 						</div>
-						<div className="modal__status">Success</div>
+						<div className="modal__status">
+							{cancelStatus === null
+								? ""
+								: cancelStatus
+								? "Success"
+								: "Error, please try again"}
+						</div>
 					</div>
 				</div>
 			</CSSTransition>

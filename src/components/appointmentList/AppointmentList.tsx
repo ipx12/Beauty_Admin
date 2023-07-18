@@ -39,8 +39,6 @@ function AppointmentList() {
 		);
 	}
 
-	console.log("render list");
-
 	return (
 		<>
 			{activeAppointments.map((item) => {
@@ -49,6 +47,7 @@ function AppointmentList() {
 						{...item}
 						key={item.id}
 						openModal={handleOpenModal}
+						getActiveAppointments={getActiveAppointments}
 					/>
 				);
 			})}
