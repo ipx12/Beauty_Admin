@@ -8,6 +8,7 @@ import { IAppointment } from "../../shared/interfaces/appointment.interface";
 type AppointmentsProps = Optional<IAppointment, "canceled"> & {
 	openModal: (state: number) => void;
 	getActiveAppointments: () => void;
+	history?: boolean;
 };
 
 const AppointmentItem = memo(
@@ -20,34 +21,37 @@ const AppointmentItem = memo(
 		canceled,
 		openModal,
 		getActiveAppointments,
+		history,
 	}: AppointmentsProps) => {
 		const [timeLeft, changeTimeLeft] = useState<string | null>(null);
 
 		useEffect(() => {
-			changeTimeLeft(
-				`${dayjs(date).diff(undefined, "h")}: ${
-					dayjs(date).diff(undefined, "m") % 60
-				}`
-			);
+			if (!history) {
+				changeTimeLeft(
+					`${dayjs(date).diff(undefined, "h")}: ${
+						dayjs(date).diff(undefined, "m") % 60
+					}`
+				);
 
-			const intervalId = setInterval(() => {
-				if (dayjs(date).diff(undefined, "m") <= 0) {
-					if (getActiveAppointments) {
-						getActiveAppointments();
+				const intervalId = setInterval(() => {
+					if (dayjs(date).diff(undefined, "m") <= 0) {
+						if (getActiveAppointments) {
+							getActiveAppointments();
+						}
+						clearInterval(intervalId);
+					} else {
+						changeTimeLeft(
+							`${dayjs(date).diff(undefined, "h")}: ${
+								dayjs(date).diff(undefined, "m") % 60
+							}`
+						);
 					}
-					clearInterval(intervalId);
-				} else {
-					changeTimeLeft(
-						`${dayjs(date).diff(undefined, "h")}: ${
-							dayjs(date).diff(undefined, "m") % 60
-						}`
-					);
-				}
-			}, 60000);
+				}, 60000);
 
-			return () => {
-				clearInterval(intervalId);
-			};
+				return () => {
+					clearInterval(intervalId);
+				};
+			}
 		}, [date]);
 
 		const formatedDate = dayjs(date).format("DD/MM/YYYY HH:mm");
@@ -60,7 +64,7 @@ const AppointmentItem = memo(
 					<span className="appointment__service">Service: {service}</span>
 					<span className="appointment__phone">Phone: {phone}</span>
 				</div>
-				{!canceled ? (
+				{!canceled && !history ? (
 					<>
 						<div className="appointment__time">
 							<span>Time left:</span>
