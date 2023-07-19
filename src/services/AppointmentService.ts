@@ -22,7 +22,12 @@ const useAppointmentService = () => {
 		if (
 			res.every((item: IAppointment) => hasRequiredFields(item, requredFields))
 		) {
-			return res;
+			return res.sort((a: IAppointment, b: IAppointment) => {
+				return (
+					dayjs(a.date).diff(undefined, "s") -
+					dayjs(b.date).diff(undefined, "s")
+				);
+			});
 		} else {
 			throw new Error("Data doesent have all the filds");
 		}

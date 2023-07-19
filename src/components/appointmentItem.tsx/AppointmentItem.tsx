@@ -6,8 +6,8 @@ import { Optional } from "utility-types";
 import { IAppointment } from "../../shared/interfaces/appointment.interface";
 
 type AppointmentsProps = Optional<IAppointment, "canceled"> & {
-	openModal: (state: number) => void;
-	getActiveAppointments: () => void;
+	openModal?: (state: number) => void;
+	getActiveAppointments?: () => void;
 	history?: boolean;
 };
 
@@ -73,7 +73,7 @@ const AppointmentItem = memo(
 						<button
 							className="appointment__cancel"
 							onClick={() => {
-								openModal(id);
+								if (openModal) openModal(id);
 							}}
 						>
 							Cancel

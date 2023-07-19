@@ -21,19 +21,7 @@ function HistoryList() {
 					);
 				})
 				.map((item) => {
-					return (
-						<AppointmentItem
-							openModal={function (state: number): void {
-								throw new Error("Function not implemented.");
-							}}
-							getActiveAppointments={function (): void {
-								throw new Error("Function not implemented.");
-							}}
-							{...item}
-							key={item.id}
-							history={true}
-						/>
-					);
+					return <AppointmentItem {...item} key={item.id} history={true} />;
 				})}
 		</>
 	);
