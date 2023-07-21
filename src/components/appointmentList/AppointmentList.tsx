@@ -13,6 +13,7 @@ function AppointmentList() {
 		activeAppointments,
 		appointmentLoadingStatus,
 		calendarDate,
+		setDateAndFilter,
 	} = useContext(AppointmentContext);
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -21,6 +22,10 @@ function AppointmentList() {
 	useEffect(() => {
 		getActiveAppointments();
 	}, [calendarDate]);
+
+	useEffect(() => {
+		setDateAndFilter([null, null]);
+	}, []);
 
 	const handleOpenModal = useCallback((id: number) => {
 		setIsOpen(true);

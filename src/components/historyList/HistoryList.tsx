@@ -11,11 +11,16 @@ function HistoryList() {
 		allAppointments,
 		appointmentLoadingStatus,
 		calendarDate,
+		setDateAndFilter,
 	} = useContext(AppointmentContext);
 
 	useEffect(() => {
 		getAppointments();
 	}, [calendarDate]);
+
+	useEffect(() => {
+		setDateAndFilter([null, null]);
+	}, []);
 
 	if (appointmentLoadingStatus === "loading") {
 		return <Spinner />;

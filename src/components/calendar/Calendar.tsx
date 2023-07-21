@@ -6,8 +6,7 @@ import "react-calendar/dist/Calendar.css";
 import "./calendar.scss";
 
 function Calendar() {
-	const { calendarDate, setDateAndFilter, getActiveAppointments } =
-		useContext(AppointmentContext);
+	const { calendarDate, setDateAndFilter } = useContext(AppointmentContext);
 
 	return (
 		<div className="calendar">
@@ -18,6 +17,12 @@ function Calendar() {
 				}}
 				selectRange={true}
 			/>
+			<button
+				className="calendar__reload"
+				onClick={() => setDateAndFilter([null, null])}
+			>
+				Clear filter
+			</button>
 		</div>
 	);
 }
