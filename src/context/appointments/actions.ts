@@ -3,12 +3,14 @@ import {
 	ActiveAppointmet,
 } from "../../shared/interfaces/appointment.interface";
 
+import { LooseValue } from "react-calendar/dist/cjs/shared/types";
+
 export enum ActionTypes {
 	SET_ACTIVE_APPOINTMENTS = "SET_ACTIVE_APPOINTMENTS",
 	SET_ALL_APPOINTMENTS = "SET_ALL_APPOINTMENTS",
 	FETCHING_APPOINTMENTS = "FETCHING_APPOINTMENTS",
 	ERROR_FETCHING_APPOINTMENTS = "ERROR_FETCHING_APPOINTMENTS",
-	CANCEL_ACTIVE_APPOINTMENT = "CANCEL_ACTIVE_APPOINTMENT",
+	SET_CALENDAR_DATE = "SET_CALENDAR_DATE",
 }
 
 export type AppointmentAction =
@@ -27,6 +29,6 @@ export type AppointmentAction =
 			type: ActionTypes.ERROR_FETCHING_APPOINTMENTS;
 	  }
 	| {
-			type: ActionTypes.CANCEL_ACTIVE_APPOINTMENT;
-			payload: ActiveAppointmet[];
+			type: ActionTypes.SET_CALENDAR_DATE;
+			payload: LooseValue;
 	  };
